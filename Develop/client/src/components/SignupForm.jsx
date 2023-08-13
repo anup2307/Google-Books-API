@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
@@ -27,10 +28,11 @@ const SignupForm = () => {
     }
 
     try {
+      console.log('userformdata',userFormData)
       const { data } = await addUser({
         variables: { ...userFormData },
       });
-
+      console.log('hi')
       Auth.login(data.addUser.token);
     } catch (err) {
       console.error(err);
@@ -45,6 +47,14 @@ const SignupForm = () => {
 
   return (
     <>
+    { data? (
+              <p>
+                Success! You may now head{' '}
+                <Link to="/">back to the homepage.</Link>
+              </p>
+            ) :(
+
+    
       <Form  onSubmit={handleFormSubmit}>
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='username'>Username</Form.Label>
@@ -90,7 +100,8 @@ const SignupForm = () => {
           variant='success'>
           Submit
         </Button>
-      </Form>
+      </Form>)
+}
       {error && (
               <div className="my-3 p-3 bg-danger text-white">
                 {error.message}
