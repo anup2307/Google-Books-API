@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, bookschema } = require("../models");
 const { signToken, AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
@@ -30,7 +30,7 @@ const resolvers = {
       if (!user) {
         throw AuthenticationError;
       }
-      console.log(user.methods);
+      console.log(user);
       const correctPw = await user.isCorrectPassword(password);
       if (!correctPw) {
         throw AuthenticationError;
@@ -44,7 +44,14 @@ const resolvers = {
       parent,
       { description, bookId, image, link, title },
       context
-    ) => {},
+    ) => {
+      if (context.user) {
+        const book = await Book.create({
+          thoughtText,
+          thoughtAuthor: context.user.username,
+        });
+      }
+    },
 
     removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
