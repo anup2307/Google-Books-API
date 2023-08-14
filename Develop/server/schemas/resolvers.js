@@ -25,6 +25,7 @@ const resolvers = {
     },
 
     login: async (parent, { email, password }) => {
+      console.log("in resolver");
       const user = User.findOne({ email });
       if (!user) {
         throw AuthenticationError;
@@ -39,9 +40,11 @@ const resolvers = {
       return { token, user };
     },
 
-    addBook: async(parent, {description,bookId, image, link, title}, context ) =>{
-
-    },
+    addBook: async (
+      parent,
+      { description, bookId, image, link, title },
+      context
+    ) => {},
 
     removeBook: async (parent, { bookId }, context) => {
       if (context.user) {
