@@ -52,6 +52,7 @@ const resolvers = {
             },
           }
         );
+
         return userBook;
       }
       throw AuthenticationError;
@@ -59,8 +60,10 @@ const resolvers = {
     },
 
     removeBook: async (parent, { bookId }, context) => {
+      console.log("in resolver removebook");
       if (context.user) {
-        return User.deleteOne(
+        return User.findOneAndUpdate(
+          { _id: context.user._id },
           { $pull: { savedBooks: { bookId } } },
           { new: true }
         );
