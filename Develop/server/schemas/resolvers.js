@@ -17,7 +17,6 @@ const resolvers = {
 
   Mutation: {
     addUser: async (parent, { username, email, password }) => {
-      console.log("resolvers", username, email, password);
       const user = await User.create({ username, email, password });
       console.log(user);
       const token = signToken(user);
@@ -25,8 +24,7 @@ const resolvers = {
     },
 
     login: async (parent, { email, password }) => {
-      console.log("in resolver");
-      const user = User.findOne({ email });
+      const user = await User.findOne({ email });
       if (!user) {
         throw AuthenticationError;
       }
@@ -42,15 +40,22 @@ const resolvers = {
 
     addBook: async (
       parent,
-      { description, bookId, image, link, title },
+      { authors, description, bookId, link, image, title },
       context
     ) => {
       if (context.user) {
-        const book = await Book.create({
-          thoughtText,
-          thoughtAuthor: context.user.username,
-        });
+        const userBook = await User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $addToSet: {
+              savedBooks: { authors, description, bookId, link, image, title },
+            },
+          }
+        );
+        return userBook;
       }
+      throw AuthenticationError;
+      ("You need to be logged in!");
     },
 
     removeBook: async (parent, { bookId }, context) => {
