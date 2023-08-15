@@ -18,19 +18,18 @@ const typeDefs = `#graphql
     type Auth {
         token: ID!
         user: User
-  }
+    }
 
-  type Query{
-    user(username: String!): User
-    me: User 
-  }
+    type Query{
+      me: User 
+    }
 
-  type Mutation {
-    addUser(username: String!, email: String!, password: String!): Auth
-    login(email: String!, password: String!): Auth
-    addBook(authors:[String], bookId:String!, description: String!, image:String, link:String, title:String!): User
-    removeBook(bookId: ID!): User
-  }
+    type Mutation {
+      addUser(username: String!, email: String!, password: String!): Auth
+      login(email: String!, password: String!): Auth
+      addBook(authors:[String], bookId:String!, description: String!, image:String, link:String, title:String!): User
+      removeBook(bookId: ID!): User
+    }
 `;
 
 module.exports = typeDefs;
